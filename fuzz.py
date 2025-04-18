@@ -18,11 +18,17 @@ def checkNonOperation():
 def calcFuzzer():
     checkNonOperation()
 
+def riskyEvalFunction():
+    user_input = "print('This is risky')"
+    eval(user_input)  # <- SECURITY RISK
+
+
 if __name__ == '__main__':
     n1, n2, op = 50, 5, '+'
     data = simpleCalc(n1, n2, op)
     print('Operation: {}\nResult: {}'.format(op, data))
     calcFuzzer()
+    riskyEvalFunction()
 
 def greaterThan(var, comp):
     if (var > comp):
