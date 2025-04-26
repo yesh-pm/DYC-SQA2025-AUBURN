@@ -53,7 +53,7 @@ def getCountFromAnalysis(ls_):
         list2ret.append(  ( dir_name, script_name, within_sec_cnt, len(taint_secret), len(privilege_dic), len(http_dict), len(secuContextDic), len(nSpaceDict), len(absentResoDict), len(rollUpdateDic), len(netPolicyDict), len(pidfDict), len(ipcDict), len(dockersockDic), len(hostNetDict), len(cap_sys_dic), len(host_alias_dic), len(allow_priv_dic), len(unconfined_dic), len(cap_module_dic) , k8s_flag, helm_flag  )  )
         except Exception as e:
             logger.error(f"Error processing tuple {tup_}:{e}")
-        logger.info(f"Exiting getCountFromAnalysis() with result list size: {len(list2ret)}")
+    logger.info(f"Exiting getCountFromAnalysis() with result list size: {len(list2ret)}")
         
     return list2ret
 
@@ -76,7 +76,7 @@ def main(directory: Path = typer.Argument(..., exists=True, help="Absolute path 
     df_all = pd.DataFrame( getCountFromAnalysis( content_as_ls ) )
     logger.info("DataFrame created successfully.")
              
-    outfile = directory, "slikube_results.csv"
+    outfile = directory / "slikube_results.csv"
     df_all.to_csv( outfile, header=constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING )
     logger.info(f"Results CSV written to {outfile}")
 
