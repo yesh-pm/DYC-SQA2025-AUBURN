@@ -6,8 +6,15 @@ Source Code to Run Tool on All Kubernetes Manifests
 import scanner 
 import pandas as pd 
 import constants
+import logging
+from pathlib import Path 
+import typer
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(_name_)
 
 def getCountFromAnalysis(ls_):
+    logger.info(f"Entered getCountFromAnalysis() with list size: {len(ls_)}")
     list2ret           = []
     for tup_ in ls_:
         within_sec_cnt = 0 
@@ -43,6 +50,10 @@ def getCountFromAnalysis(ls_):
         helm_flag      = tup_[22]
 
         list2ret.append(  ( dir_name, script_name, within_sec_cnt, len(taint_secret), len(privilege_dic), len(http_dict), len(secuContextDic), len(nSpaceDict), len(absentResoDict), len(rollUpdateDic), len(netPolicyDict), len(pidfDict), len(ipcDict), len(dockersockDic), len(hostNetDict), len(cap_sys_dic), len(host_alias_dic), len(allow_priv_dic), len(unconfined_dic), len(cap_module_dic) , k8s_flag, helm_flag  )  )
+        except Exception as e:
+            logger.error(f"Error processing tuple {tup_}:{e}")
+        logger.info(f"Exiting getCountFromAnalysis() with result list size: {len(list2ret)}")
+        
     return list2ret
 
 
@@ -50,18 +61,30 @@ def main(directory: Path = typer.Argument(..., exists=True, help="Absolute path 
          ):
     """
     Run KubeSec in a Kubernetes directory and get results in a CSV file.
-
     """
+    logger.info(f"Started main() with directory: {directory}")
+
+    try:
     content_as_ls, sarif_json   = scanner.runScanner( directory )
-    
+    logger.info(f"Scanner run complete. Number of manifests found: {len(content_as_ls)}")
+             
     with open("SLIKUBE.sarif", "w") as f:
       f.write(sarif_json)
+      logger.info("SARIF file written successfully.")
 
     df_all          = pd.DataFrame( getCountFromAnalysis( content_as_ls ) )
+    logger.info("DataFrame created successfully.")
+             
     outfile = Path(directory, "slikube_results.csv")
 
     df_all.to_csv( outfile, header= constants.CSV_HEADER , index=False, encoding= constants.CSV_ENCODING )
+    logger.info(f"Results CSV written to {outfile}")
 
+except Exception as e:
+    logger.error(f"Error occurred in main():{e}")
+    raise
+finally: 
+    logger.info("Exiting main()")
 
 if __name__ == '__main__':
 
