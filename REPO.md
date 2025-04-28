@@ -7,6 +7,6 @@ SQA Project Report
 2. Create a fuzz.py file that will automatically fuzz 5 Python methods of your choice. Report any bugs you discovered by the fuzz.py file. fuzz.py will be automatically executed from GitHub actions. (Yeshenia)
    - Some things I noticed while working on fuzz.py and also the only bug I noticed is that on the evens method if x%2 wasn't enclosed in parenthesis then double-digit even numbers would not be detected. For example if 22 was passed then it would not be recognized as an even number. Same thing with negative numbers.
 3. Integrate forensics by modifying 5 Python methods of your choice. (Dorothy)
-   - report goes here
+   - 
 =======
 >>>>>>> 79e8c25d83d0c7cc2caafd0fb9810ee6f7f0d5f5
