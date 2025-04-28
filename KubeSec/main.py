@@ -9,6 +9,7 @@ import constants
 import logging
 from pathlib import Path 
 import typer
+import forensics_helper as forensics
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
