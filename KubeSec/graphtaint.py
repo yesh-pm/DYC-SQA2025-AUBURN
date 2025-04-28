@@ -7,15 +7,22 @@ import constants
 import parser 
 import os 
 from itertools import combinations
+import logging 
 
 def getYAMLFiles(path_to_dir):
+    logging.info(f"Entering getYAMLFiles with path: {path_to_dir}")
     valid_  = [] 
-    for root_, dirs, files_ in os.walk( path_to_dir ):
-       for file_ in files_:
-           full_p_file = os.path.join(root_, file_)
-           if(os.path.exists(full_p_file)):
-             if (full_p_file.endswith( constants.YAML_EXTENSION  ) or full_p_file.endswith( constants.YML_EXTENSION  )  ):
-               valid_.append(full_p_file)
+    try:
+        for root_, dirs, files_ in os.walk( path_to_dir ):
+           for file_ in files_:
+               full_p_file = os.path.join(root_, file_)
+               if(os.path.exists(full_p_file)):
+                 if (full_p_file.endswith( constants.YAML_EXTENSION  ) or full_p_file.endswith( constants.YML_EXTENSION  )  ):
+                   valid_.append(full_p_file)
+    except Exception as e:
+        loggin.error(f"Error in get YAMLFiles for path {path_to_dir}: {e}")
+        raise
+    logging.info(f"Exiting getYAMLFiles with {len(valid_)} YAML files found")
     return valid_ 
 
 def constructHelmString(hiera_tuple): 
